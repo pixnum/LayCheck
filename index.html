@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LayCheck - Layoff Forecaster</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* Global Styles */
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif;}
+html,body{height:100%;background:#1e1e2f;color:#fff;transition:0.3s;}
+body.light{background:#e0e0e0;color:#000;}
+.app-frame{position:relative;max-width:800px;margin:20px auto;padding:20px;border-radius:25px;background:linear-gradient(145deg,#1f1f2f,#22223b);box-shadow:8px 8px 20px #161622,-8px -8px 20px #29294d;transition:all 0.3s;}
+body.light .app-frame{background:#e0e0e0;box-shadow:8px 8px 20px #bebebe,-8px -8px 20px #fff;}
+h1{text-align:center;font-size:1.8rem;margin-bottom:20px;letter-spacing:1px;color:#00d4ff;}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:15px;}
+.card{background:#1e1e2f;border-radius:20px;padding:12px;display:flex;flex-direction:column;box-shadow:6px 6px 15px #161622,-6px -6px 15px #29294d;transition:all 0.3s;}
+body.light .card{background:#e0e0e0;box-shadow:6px 6px 15px #bebebe,-6px -6px 15px #fff;}
+.card label{font-weight:600;margin-bottom:5px;font-size:13px;color:#00d4ff;}
+.card input, .card select{padding:8px;border:none;border-radius:10px;background:#1e1e2f;color:#fff;box-shadow:inset 4px 4px 8px #161622,inset -4px -4px 8px #29294d;outline:none;transition:all 0.3s;font-size:13px;}
+body.light .card input,body.light .card select{background:#e0e0e0;color:#000;box-shadow:inset 4px 4px 8px #bebebe,inset -4px -4px 8px #fff;}
+button{margin-top:10px;padding:12px;border:none;border-radius:15px;font-size:14px;font-weight:600;cursor:pointer;background:linear-gradient(145deg,#00d4ff,#0096c7);color:#fff;box-shadow:4px 4px 10px #0a788b,-4px -4px 10px #00f0ff;transition:all 0.2s;}
+button:hover{transform:translateY(-2px);box-shadow:5px 5px 12px #0a788b,-5px -5px 12px #00f0ff;}
+.result{text-align:center;font-size:1rem;margin-top:15px;font-weight:600;color:#ffec00;}
+.risk-bar-container{width:100%;height:20px;border-radius:15px;background:#111122;box-shadow:inset 3px 3px 6px #0b0b12,inset -3px -3px 6px #1a1a33;margin-top:10px;}
+.risk-bar{height:100%;width:0%;border-radius:15px;background:linear-gradient(90deg,#00ff00,#ffff00,#ff0000);transition:width 1s ease-in-out;}
+.circular-gauge{width:100%;max-width:160px;margin:20px auto;position:relative;}
+.circular-gauge svg{width:100%;height:auto;}
+.circular-gauge text{font-weight:600;font-size:14px;fill:#00d4ff;text-anchor:middle;}
+.dark-mode-toggle{position:absolute;top:10px;right:10px;padding:8px 16px;border-radius:12px;background:#1e1e2f;box-shadow:4px 4px 10px #161622,-4px -4px 10px #29294d;color:#00d4ff;cursor:pointer;font-weight:600;z-index:10;}
+body.light .dark-mode-toggle{background:#e0e0e0;color:#0096c7;box-shadow:4px 4px 10px #bebebe,-4px -4px 10px #fff;}
+footer{margin-top:15px;text-align:center;font-size:12px;color:#888;}
+@media(max-width:480px){.grid{grid-template-columns:1fr;} .card input,.card select{font-size:14px;padding:10px;}}
+</style>
+</head>
+<body>
+<div class="app-frame">
+<button class="dark-mode-toggle" onclick="toggleDarkMode()">Toggle Mode</button>
+<h1>LayCheck</h1>
+<div class="grid">
+<div class="card"><label for="industry">Industry</label><select id="industry"><option value="tech">Technology</option><option value="finance">Finance</option><option value="retail">Retail</option><option value="healthcare">Healthcare</option><option value="education">Education</option><option value="manufacturing">Manufacturing</option><option value="transportation">Transportation</option><option value="energy">Energy</option><option value="construction">Construction</option><option value="hospitality">Hospitality</option><option value="media">Media</option><option value="telecom">Telecom</option><option value="agriculture">Agriculture</option><option value="pharmaceuticals">Pharmaceuticals</option><option value="realestate">Real Estate</option><option value="insurance">Insurance</option><option value="legal">Legal</option><option value="automotive">Automotive</option><option value="consulting">Consulting</option><option value="nonprofit">Non-Profit</option><option value="government">Government</option></select></div>
+<div class="card"><label for="role">Job Role</label><select id="role"><option value="developer">Developer</option><option value="manager">Manager</option><option value="hr">HR</option><option value="sales">Sales</option><option value="support">Support</option><option value="designer">Designer</option><option value="analyst">Analyst</option><option value="marketing">Marketing</option><option value="accountant">Accountant</option><option value="ceo">CEO</option><option value="cto">CTO</option><option value="cfo">CFO</option><option value="productmanager">Product Manager</option><option value="qa">QA Engineer</option><option value="operations">Operations</option><option value="logistics">Logistics</option><option value="recruiter">Recruiter</option><option value="consultant">Consultant</option><option value="intern">Intern</option><option value="advisor">Advisor</option></select></div>
+<div class="card"><label for="department">Department</label><select id="department"><option value="engineering">Engineering</option><option value="finance">Finance</option><option value="sales">Sales</option><option value="hr">HR</option><option value="support">Support</option><option value="marketing">Marketing</option><option value="operations">Operations</option><option value="product">Product</option><option value="design">Design</option><option value="legal">Legal</option><option value="it">IT</option><option value="research">Research</option><option value="customer">Customer Success</option><option value="procurement">Procurement</option><option value="strategy">Strategy</option><option value="logistics">Logistics</option><option value="communications">Communications</option><option value="compliance">Compliance</option><option value="security">Security</option><option value="training">Training</option></select></div>
+<div class="card"><label for="companySize">Company Size</label><select id="companySize"><option value="small">&lt;50</option><option value="medium">50-500</option><option value="large">&gt;500</option></select></div>
+<div class="card"><label for="revenueTrend">Revenue Trend (1-15)</label><input type="number" id="revenueTrend" min="1" max="15" placeholder="1=Decline, 15=Growth"></div>
+<div class="card"><label for="market">Market Conditions (1-15)</label><input type="number" id="market" min="1" max="15" placeholder="1=Poor, 15=Strong"></div>
+<div class="card"><label for="performance">Performance (1-10)</label><input type="number" id="performance" min="1" max="10" placeholder="Employee performance"></div>
+<div class="card"><label for="tenure">Tenure (Years)</label><input type="number" id="tenure" min="0" max="40" placeholder="Employee tenure"></div>
+<div class="card"><label for="contractType">Contract Type</label><select id="contractType"><option value="fulltime">Full-time</option><option value="parttime">Part-time</option><option value="contractor">Contractor</option></select></div>
+<div class="card"><label for="remote">Work Location</label><select id="remote"><option value="onsite">On-site</option><option value="remote">Remote</option><option value="hybrid">Hybrid</option></select></div>
+<div class="card"><label for="previousLayoffs">Previous Layoffs</label><select id="previousLayoffs"><option value="none">None</option><option value="few">Few</option><option value="many">Many</option></select></div>
+</div>
+
+<button onclick="forecastLayoff()">Forecast Risk</button>
+<div class="result" id="result"></div>
+<div class="risk-bar-container"><div class="risk-bar" id="riskBar"></div></div>
+<div class="circular-gauge">
+<svg viewBox="0 0 100 50">
+<path d="M5,50 A45,45 0 0,1 95,50" stroke="#555" stroke-width="10" fill="none"/>
+<path id="progressArc" d="M5,50 A45,45 0 0,1 95,50" stroke="#00ff00" stroke-width="10" fill="none" stroke-dasharray="141.3" stroke-dashoffset="141.3"/>
+<text x="50" y="45" id="gaugeText">0%</text>
+</svg>
+</div>
+<footer>© LayCheck 2025</footer>
+</div>
+
+<script>
+function forecastLayoff(){
+let industry=document.getElementById('industry').value;
+let role=document.getElementById('role').value;
+let size=document.getElementById('companySize').value;
+let revenue=parseFloat(document.getElementById('revenueTrend').value);
+let market=parseFloat(document.getElementById('market').value);
+let perf=parseFloat(document.getElementById('performance').value);
+let tenure=parseFloat(document.getElementById('tenure').value);
+let contract=document.getElementById('contractType').value;
+let location=document.getElementById('remote').value;
+let prev=document.getElementById('previousLayoffs').value;
+if([revenue,market,perf,tenure].some(isNaN)){document.getElementById('result').innerText="Please fill all numeric inputs!";document.getElementById('riskBar').style.width='0%';document.getElementById('progressArc').style.strokeDashoffset=141.3;document.getElementById('progressArc').style.stroke="#00ff00";document.getElementById('gaugeText').textContent='0%';return;}
+let risk=30;
+switch(industry){case'tech':risk+=10;break;case'finance':risk+=5;break;case'retail':risk+=15;break;case'healthcare':risk-=5;break;case'education':risk-=5;break;case'manufacturing':risk+=5;}
+if(role==='manager')risk-=5;if(role==='sales')risk+=5;if(size==='small')risk+=5;if(size==='large')risk-=5;risk+=(15-revenue)*2; risk+=(15-market)*2;risk-=(perf-5)*4; risk-=tenure*0.5;if(contract==='contractor')risk+=10;if(location==='remote')risk-=3;if(prev==='few')risk+=5;if(prev==='many')risk+=10;risk=Math.max(0,Math.min(100,Math.round(risk)));
+document.getElementById('result').innerText=`Estimated Layoff Risk: ${risk}%`;document.getElementById('riskBar').style.width=risk+'%';
+let progressArc=document.getElementById('progressArc');let dashLength=141.3;let offset=dashLength-(dashLength*risk/100);progressArc.style.transition='stroke-dashoffset 1s ease-in-out, stroke 1s ease-in-out';progressArc.style.strokeDashoffset=offset;
+if(risk<=50){let green=255;let red=Math.floor(255*(risk/50));progressArc.style.stroke=`rgb(${red},${green},0)`;}else{let red=255;let green=Math.floor(255*(1-(risk-50)/50));progressArc.style.stroke=`rgb(${red},${green},0)`;}
+document.getElementById('gaugeText').textContent=risk+'%';
+}
+function toggleDarkMode(){document.body.classList.toggle('light');}
+</script>
+</body>
+</html>
