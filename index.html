@@ -130,24 +130,23 @@ body.light .disclaimer { color:#555; }
 </div>
 
 <script>
-// Options
-let industries=["Tech","Finance","Retail","Healthcare","Education","Manufacturing","Automotive","Telecom","Energy","Government","Non-Profit","Agriculture","Media","Hospitality","Construction","Pharmaceutical","Biotech","Transportation","Logistics","Real Estate","Consulting","Entertainment","Fashion","FMCG","Mining","Oil & Gas","Utilities","Chemicals","Insurance","Banking","Research","Startup","Defense","Aerospace","Food & Beverage","Travel","Tourism","Sports","Gaming","Internet","AI","ML","Robotics","Nanotechnology","Electronics","Software","Hardware","Printing"];
-let roles=["Engineer","Manager","Sales","HR","Support","Designer","Analyst","Executive","Consultant","Intern","Developer","QA","Marketing","Finance","Operations","CTO","CFO","CEO","Product Manager","Project Manager","UX Designer","UI Designer","Researcher","Tester","Architect","Director","COO","Advisor","Trainer","Recruiter","Social Media","Content Writer","Business Analyst","Data Analyst","DevOps","Scientist","Technician","Legal","Internship","Assistant","Consulting Manager","Engineering Manager","HR Manager","Finance Executive","Operations Head","Marketing Head"];
-let departments=["IT","Finance","Sales","Marketing","HR","Operations","Legal","Design","Customer Service","Supply Chain","Research","Security","Procurement","Strategy","Training","IT Security","Product","Analytics","Data","Support","Communications","Operations Head","Legal & Compliance","HR Business Partner","Digital Marketing","Field Sales","Inside Sales","Customer Relations","Training & Development","Procurement Manager","Strategy Planning","Quality","Maintenance","R&D","Content","Media","Public Relations","Creative","Finance & Audit","Project Management","Innovation","Production","Logistics","Customer Experience","Operations Manager","Risk"];
+// Full 45+ options arrays
+let industries=["AI","Aerospace","Agriculture","Automotive","Banking","Biotech","Chemicals","Construction","Consulting","Defense","Education","Energy","Entertainment","FMCG","Fashion","Finance","Food & Beverage","Government","Healthcare","Hospitality","Internet","Logistics","Manufacturing","Media","Mining","Nanotechnology","Non-Profit","Oil & Gas","Pharmaceutical","Printing","Real Estate","Research","Retail","Robotics","Software","Sports","Startup","Telecom","Technology","Tourism","Transportation","Travel","Utilities","Electronics","Hardware","Marketing","Media Production"];
+let roles=["Accountant","Advisor","Analyst","Architect","Assistant","Business Analyst","CEO","CFO","COO","Consultant","Consulting Manager","Content Writer","Data Analyst","Developer","Director","Designer","DevOps","Engineer","Executive","Finance Executive","HR Manager","Intern","Internship","Marketing Head","Manager","Operations Head","Operations Manager","Product Manager","Project Manager","QA","Recruiter","Researcher","Sales","Scientist","Social Media","Support","Tester","Trainer","UX Designer","UI Designer","Technician","CTO","Legal","Project Coordinator","Field Sales"];
+let departments=["Analytics","Communications","Content","Customer Experience","Customer Relations","Data","Design","Digital Marketing","Finance","Finance & Audit","HR","HR Business Partner","IT","IT Security","Legal","Legal & Compliance","Logistics","Maintenance","Marketing","Operations","Operations Head","Operations Manager","Procurement","Procurement Manager","Product","Project Management","Quality","R&D","Research","Risk","Sales","Strategy","Strategy Planning","Support","Training","Training & Development","Creative","Media","Public Relations","Customer Service","Supply Chain","Security","Innovation","Production"];
 
 // Sort A-Z
 industries.sort((a,b)=>a.localeCompare(b));
 roles.sort((a,b)=>a.localeCompare(b));
 departments.sort((a,b)=>a.localeCompare(b));
 
-// Populate selects
+// Populate dropdowns
 function populate(selectId, arr){
   const sel=document.getElementById(selectId);
   sel.innerHTML="";
   arr.forEach((val,i)=>{
     const o=document.createElement("option");
     o.value=o.textContent=val;
-    if(i===0) o.selected=true;
     sel.appendChild(o);
   });
 }
@@ -155,7 +154,7 @@ populate("industrySelect", industries);
 populate("roleSelect", roles);
 populate("departmentSelect", departments);
 
-// Safe search: suggest only
+// Searchable dropdown
 function setupSearch(inputId, selectId){
   const input=document.getElementById(inputId);
   const select=document.getElementById(selectId);
